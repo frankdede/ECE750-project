@@ -97,7 +97,10 @@ public class SampleHandler extends AbstractHandler {
 //		MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();
 //		CatchVisitor visitor = new CatchVisitor();
 
-		TryVisitor visitor = new TryVisitor();
+//		TryVisitor visitor = new TryVisitor();
+		
+//		DummyVisitor visitor = new DummyVisitor();
+		TryCauseVisitor visitor = new TryCauseVisitor();
 		
 		System.out.println("Started analyzing...");
 		astRoot.accept(visitor);
