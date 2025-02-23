@@ -1,5 +1,6 @@
 package jdtplugin.handlers;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -9,8 +10,8 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 
 public class GetCauseInCatchVisitor extends VisitorWithAntipatternRecording<GetCauseInCatchVisitor> {
 	
-    public GetCauseInCatchVisitor(String sourceCode) {
-		super(sourceCode);
+    public GetCauseInCatchVisitor() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -47,8 +48,10 @@ public class GetCauseInCatchVisitor extends VisitorWithAntipatternRecording<GetC
 
 
 	@Override
-	protected GetCauseInCatchVisitor createSubclassInstance(String sourceCode) {
+	protected GetCauseInCatchVisitor createSubclassInstance() {
 		// TODO Auto-generated method stub
-		return new GetCauseInCatchVisitor(sourceCode);
+		GetCauseInCatchVisitor visitor = new GetCauseInCatchVisitor();
+		visitor.setOutputStreamWriter(writer);
+		return visitor;
 	}
 }

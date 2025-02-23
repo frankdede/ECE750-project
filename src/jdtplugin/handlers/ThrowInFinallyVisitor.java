@@ -1,5 +1,7 @@
 package jdtplugin.handlers;
 
+import java.io.OutputStreamWriter;
+
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.dom.AST;
@@ -14,27 +16,33 @@ import org.eclipse.jdt.core.dom.ThrowStatement;
 
 
 public class ThrowInFinallyVisitor extends BaseVisitor<ThrowInFinallyVisitor> {
+	public OutputStreamWriter writer;
 
-	public ThrowInFinallyVisitor(String sourceCode) {
-		super(sourceCode);
+	public ThrowInFinallyVisitor() {
+		super();
+		this.writer = new OutputStreamWriter(System.out); 
+	}
+	
+	public void setOutputStreamWriter(OutputStreamWriter writer) {
+		this.writer = writer;
 	}
 
 	@Override
-	protected ThrowInFinallyVisitor createSubclassInstance(String sourceCode) {
+	protected ThrowInFinallyVisitor createSubclassInstance() {
 		// TODO Auto-generated method stub
-		return new ThrowInFinallyVisitor(sourceCode);
+		return new ThrowInFinallyVisitor();
 	}
 
 	public class ThrowVisitor extends VisitorWithAntipatternRecording<ThrowVisitor>{
 
-		public ThrowVisitor(String sourceCode) {
-			super(sourceCode);
+		public ThrowVisitor() {
+			super();
 		}
 
 		@Override
 		public boolean visit(ThrowStatement node) {
-			this.recordAntipattern(node, sourceCode); // TODO: provide source code
-			return false;
+			this.recordAntipattern(node); // TODO: provide source code
+			return true;
 		}
 			
 
@@ -45,9 +53,11 @@ public class ThrowInFinallyVisitor extends BaseVisitor<ThrowInFinallyVisitor> {
 		}
 
 		@Override
-		protected ThrowVisitor createSubclassInstance(String sourceCode) {
+		protected ThrowVisitor createSubclassInstance() {
 			// TODO Auto-generated method stub
-			return new ThrowVisitor(sourceCode);
+			ThrowVisitor throwVistor = new ThrowVisitor();
+			throwVistor.setOutputStreamWriter(writer);
+			return throwVistor;
 		}
 	}
 
@@ -56,7 +66,8 @@ public class ThrowInFinallyVisitor extends BaseVisitor<ThrowInFinallyVisitor> {
 	public boolean visit(TryStatement node) {
 		if(node.getFinally() != null) {
 			Statement stmt = node.getFinally();
-			ThrowVisitor throwVisitor = new ThrowVisitor(sourceCode);
+			ThrowVisitor throwVisitor = new ThrowVisitor();
+			throwVisitor.setOutputStreamWriter(writer);
 			stmt.accept(throwVisitor);
 		}
 		return super.visit(node);

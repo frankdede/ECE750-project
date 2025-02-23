@@ -1,11 +1,12 @@
 package jdtplugin.handlers;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class DummyCatchVisitor extends VisitorWithAntipatternRecording<DummyCatchVisitor>{ 
-	public DummyCatchVisitor(String sourceCode) {
-		super(sourceCode);
+	public DummyCatchVisitor() {
+		super();
 		// TODO Auto-generated constructor stub
 	}
 
@@ -14,7 +15,7 @@ public class DummyCatchVisitor extends VisitorWithAntipatternRecording<DummyCatc
 	public boolean visit(CatchClause node) {
 	    // Check if the catch block is empty (Dummy Handler)
 	    if (node.getBody() != null && node.getBody().statements().isEmpty()) {
-	        this.recordAntipattern(node, sourceCode); // TODO: get source code !!!!!!
+	        this.recordAntipattern(node);
 	    }
 
 	    return super.visit(node);
@@ -31,9 +32,12 @@ public class DummyCatchVisitor extends VisitorWithAntipatternRecording<DummyCatc
 	}
 
 	@Override
-	protected DummyCatchVisitor createSubclassInstance(String sourceCode) {
+	protected DummyCatchVisitor createSubclassInstance() {
 		// TODO Auto-generated method stub
-		return new DummyCatchVisitor(sourceCode);
+		
+		DummyCatchVisitor dummyCatchVisitor = new DummyCatchVisitor();
+		dummyCatchVisitor.setOutputStreamWriter(writer);
+		return dummyCatchVisitor;
 	}
 
 }

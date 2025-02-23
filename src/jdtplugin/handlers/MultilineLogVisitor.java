@@ -2,6 +2,8 @@ package jdtplugin.handlers;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.CatchClause;
 import org.eclipse.jdt.core.dom.Expression;
@@ -11,8 +13,8 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 
 public class MultilineLogVisitor extends VisitorWithAntipatternRecording<MultilineLogVisitor> {
 
-	public MultilineLogVisitor(String sourceCode) {
-		super(sourceCode);
+	public MultilineLogVisitor() {
+		super();
 	}
 
 	@Override
@@ -91,9 +93,10 @@ public class MultilineLogVisitor extends VisitorWithAntipatternRecording<Multili
 	}
 
 	@Override
-	protected MultilineLogVisitor createSubclassInstance(String sourceCode) {
-		// TODO Auto-generated method stub
-		return new MultilineLogVisitor(sourceCode);
+	protected MultilineLogVisitor createSubclassInstance() {
+		MultilineLogVisitor multilineLogVisitor = new MultilineLogVisitor();
+		multilineLogVisitor.setOutputStreamWriter(writer);
+		return multilineLogVisitor;
 	}
 
 }

@@ -1,11 +1,7 @@
 package jdtplugin.handlers;
 
 
-import java.lang.annotation.ElementType;
-
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IElementChangedListener;
-import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
@@ -20,17 +16,11 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 
 
 public abstract class BaseVisitor<T extends BaseVisitor<T>> extends ASTVisitor{
-	protected String sourceCode;
 	
-	public BaseVisitor(String sourceCode) {
-		this.sourceCode = sourceCode;
-	}
-	
-	protected abstract T createSubclassInstance(String sourceCode);
+	protected abstract T createSubclassInstance();
 	
 	
 	public void visitBinding(IBinding binding) throws JavaModelException  {
-		ASTParser parser =  ASTParser.newParser(AST.JLS22); 
 		if (binding == null) {
 			return;
 		}
@@ -46,8 +36,8 @@ public abstract class BaseVisitor<T extends BaseVisitor<T>> extends ASTVisitor{
 		if (unit == null) {
 			return;
 		}
-		String cuSourceCode = unit.getSource();
-			
+		
+		ASTParser parser =  ASTParser.newParser(AST.JLS22); 
 		parser.setSource(unit);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
@@ -56,7 +46,7 @@ public abstract class BaseVisitor<T extends BaseVisitor<T>> extends ASTVisitor{
 		
 		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 		MethodDeclaration decl = (MethodDeclaration)cu.findDeclaringNode(binding.getKey());
-		T visitor = createSubclassInstance(cuSourceCode);
+		T visitor = createSubclassInstance();
 		
 		decl.accept(visitor);
 	}
@@ -68,7 +58,6 @@ public abstract class BaseVisitor<T extends BaseVisitor<T>> extends ASTVisitor{
 		try {
 			this.visitBinding(binding);
 		} catch (JavaModelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -81,7 +70,6 @@ public abstract class BaseVisitor<T extends BaseVisitor<T>> extends ASTVisitor{
 		try {
 			this.visitBinding(binding);
 		} catch (JavaModelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
